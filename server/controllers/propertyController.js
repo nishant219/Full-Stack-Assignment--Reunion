@@ -9,7 +9,7 @@ const BigPromise = require("../middlewares/bigPromise");
 exports.createProperty = BigPromise(async (req, res, next) => {
     winstonlogger.info("createProperty controller called...");
   
-    const { name, description, price, address } = req.body;
+    const { name, description, price, address, typeOfProperty, isAvailable } = req.body;
     const owner = req.user._id;
   
     if (!owner) {
@@ -20,13 +20,23 @@ exports.createProperty = BigPromise(async (req, res, next) => {
       });
     }
   
-    if (!name || !description || !price || !address) {
-      winstonlogger.error("Name, description, price, and address are required");
+    if (!name || !description || !price || !address || !typeOfProperty || !isAvailable) {
+      winstonlogger.error("Name, description, price, address, type of property and availability status");
       return res.status(400).json({
         success: false,
-        message: "Name, description, price, and address are required",
+        message: "Name, description, price, address, type of property and availability status are required",
       });
     }
+
+    const existingProperty = await Property.findOne({ name, address });
+
+      if (existingProperty) {
+        winstonlogger.error("Property with the same name and address already exists");
+        return res.status(400).json({
+          success: false,
+          message: "Property with the same name and address already exists",
+        });
+      }
   
     try {
       const property = await Property.create({
@@ -35,6 +45,8 @@ exports.createProperty = BigPromise(async (req, res, next) => {
         price,
         address,
         owner,
+        typeOfProperty,
+        isAvailable
       });
   
       res.status(201).json({
@@ -124,7 +136,7 @@ exports.updateProperty = BigPromise(async (req, res, next) => {
     winstonlogger.info("updateProperty controller called...");
   
     const { id } = req.params;
-    const { name, description, price, address } = req.body;
+    const { name, description, price, address, isAvailable, typeOfProperty } = req.body;
   
     if (!id) {
       winstonlogger.error("Property ID is required");
@@ -134,18 +146,18 @@ exports.updateProperty = BigPromise(async (req, res, next) => {
       });
     }
   
-    if (!name || !description || !price || !address) {
-      winstonlogger.error("Name, description, price, and address are required");
+    if (!name || !description || !price || !address || !isAvailable || !typeOfProperty) {
+      winstonlogger.error("Name, description, price, status and address are required");
       return res.status(400).json({
         success: false,
-        message: "Name, description, price, and address are required",
+        message: "Name, description, price, status and address are required",
       });
     }
   
     try {
       const property = await Property.findByIdAndUpdate(
         id,
-        { name, description, price, address },
+        { name, description, price, address, isAvailable, typeOfProperty },
         { new: true }
       );
   

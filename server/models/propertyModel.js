@@ -25,6 +25,16 @@ const propertySchema = new mongoose.Schema({
         ref: "User",
         required: [true, "Please provide a owner"],
     },
+    isAvailable: {
+        type: Boolean,
+        default: true,
+        required: [true, "Please provide availability status"],
+    },
+    typeOfProperty: {
+        type: String,
+        enum: ["house", "apartment", "townhouse", "land", "commercial", "other"],
+        required: [true, "Please provide a type of property"],
+    },
     createdAt: {
         type: Date,
         default: Date.now,
