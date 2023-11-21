@@ -23,10 +23,6 @@ const userSchema = new mongoose.Schema({
     minlength: [6, "password should be atleast of 6 character"],
     select: false, //while calling user pass not present by default, call it explicitly
   },
-  role: {
-    type: String,
-    default: "user",
-  },
 
   forgotPasswordToken: String,
 

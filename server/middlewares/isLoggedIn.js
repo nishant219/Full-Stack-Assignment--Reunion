@@ -4,22 +4,45 @@ const jwt= require("jsonwebtoken");
 const winstonLogger = require("../utils/winston");
 
 
+exports.isLoggedIn = BigPromise(async (req, res, next) => {
+  req.user = null; //to avoid undefined error
+  
+  const token =
+    req.cookies.token || (req.headers.authorization && req.headers.authorization.replace("Bearer ", ""));
 
-//not only verify token is present or not but also enject some info
-exports.isLoggedIn = BigPromise(async(req, res, next)=>{
+ 
+  if (!token) {
+    winstonLogger.error("User not authenticated");
+    return res.status(401).json({
+      success: false,
+      message: "User not authenticated",
+    });
+  }
 
-//extract the token
-const token= req.cookies.token || req.header("Authorization").replace("Bearer", "");
+  // Decode token
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-if(!token){
-   return winstonLogger.error("first login to access this page");
-}   
-//decode token
-const decoded= jwt.verify(token, process.env.JWT_SECRET)
-req.user = await User.findById(decoded.id)  //here we are injecting user in our req object (req body)
-next();
-})
+    // Inject user in our req object (req body)
+    req.user = await User.findById(decoded.id);
 
+    if (!req.user) {
+      winstonLogger.error("User not found in the database");
+      return res.status(401).json({
+        success: false,
+        message: "User not found in the database",
+      });
+    }
+
+    next();
+  } catch (error) {
+    winstonLogger.error("Error decoding token:", error);
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized: Invalid token",
+    });
+  }
+});
 
 
 

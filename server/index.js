@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const helmet = require('helmet');
 const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
+const cookieParser = require("cookie-parser");
 
 
 const dotenv = require('dotenv');
@@ -16,6 +17,7 @@ const DBConnection=require("./config/DBConnection");
 
 //all routes
 const userRoutes = require('./routes/userRoutes');
+const propertyRoutes = require('./routes/propertyRoutes');
 
 
 const app = express();
@@ -35,7 +37,7 @@ app.use(cors());  // Enable CORS
 app.use(morgan('tiny')); // Logging HTTP requests
 app.use(helmet()); // Set security HTTP headers
 app.use(xss()); // Sanitize data
-
+app.use(cookieParser());
 
 const limiter = rateLimit({
   max: 100,
@@ -46,6 +48,7 @@ const limiter = rateLimit({
 
 // Define API routes 
 app.use('/api/', limiter, userRoutes);
+app.use('/api/', limiter, propertyRoutes);
 
 
 
