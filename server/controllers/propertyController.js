@@ -49,3 +49,165 @@ exports.createProperty = BigPromise(async (req, res, next) => {
       });
     }
   });
+
+  
+  //fetch all properties
+exports.getAllProperties = BigPromise(async (req, res, next) => {
+    winstonlogger.info("getAllProperties controller called...");
+  
+    try {
+      const properties = await Property.find();
+
+      if (!properties) {
+        winstonlogger.error("Properties not found");
+        return res.status(404).json({
+          success: false,
+          message: "Properties not found",
+        });
+      }
+  
+      res.status(200).json({
+        status: "success",
+        data: properties,
+      });
+    } catch (error) {
+      winstonlogger.error("Error fetching properties:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Properties not found",
+      });
+    }
+  });
+
+
+  //delete property based on id
+exports.deleteProperty = BigPromise(async (req, res, next) => {
+    winstonlogger.info("deleteProperty controller called...");
+  
+    const { id } = req.params;
+  
+    if (!id) {
+      winstonlogger.error("Property ID is required");
+      return res.status(400).json({
+        success: false,
+        message: "Property ID is required",
+      });
+    }
+  
+    try {
+      const property = await Property.findByIdAndDelete(id);
+  
+      if (!property) {
+        winstonlogger.error("Property not found");
+        return res.status(404).json({
+          success: false,
+          message: "Property not found",
+        });
+      }
+  
+      res.status(200).json({
+        status: "success",
+        data: property,
+      });
+    } catch (error) {
+      winstonlogger.error("Error deleting property:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Property not deleted",
+      });
+    }
+  });
+
+
+ //update property based on ID
+exports.updateProperty = BigPromise(async (req, res, next) => {
+    winstonlogger.info("updateProperty controller called...");
+  
+    const { id } = req.params;
+    const { name, description, price, address } = req.body;
+  
+    if (!id) {
+      winstonlogger.error("Property ID is required");
+      return res.status(400).json({
+        success: false,
+        message: "Property ID is required",
+      });
+    }
+  
+    if (!name || !description || !price || !address) {
+      winstonlogger.error("Name, description, price, and address are required");
+      return res.status(400).json({
+        success: false,
+        message: "Name, description, price, and address are required",
+      });
+    }
+  
+    try {
+      const property = await Property.findByIdAndUpdate(
+        id,
+        { name, description, price, address },
+        { new: true }
+      );
+  
+      if (!property) {
+        winstonlogger.error("Property not found");
+        return res.status(404).json({
+          success: false,
+          message: "Property not found",
+        });
+      }
+  
+      res.status(200).json({
+        status: "success",
+        data: property,
+      });
+    } catch (error) {
+      winstonlogger.error("Error updating property:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Property not updated",
+      });
+    }
+  });
+
+  
+
+  //fetch properties based on owner ID
+exports.getPropertiesByOwner = BigPromise(async (req, res, next) => {
+    winstonlogger.info("getPropertiesByOwner controller called...");
+  
+    const { id } = req.params;
+  
+    if (!id) {
+      winstonlogger.error("Owner ID is required");
+      return res.status(400).json({
+        success: false,
+        message: "Owner ID is required",
+      });
+    }
+  
+    try {
+      const properties = await Property.find({ owner: id });
+  
+      if (!properties) {
+        winstonlogger.error("Properties not found");
+        return res.status(404).json({
+          success: false,
+          message: "Properties not found",
+        });
+      }
+  
+      res.status(200).json({
+        status: "success",
+        data: properties,
+      });
+    } catch (error) {
+      winstonlogger.error("Error fetching properties:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Properties not found",
+      });
+    }
+  });
+
+
