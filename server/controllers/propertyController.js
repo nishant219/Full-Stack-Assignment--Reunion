@@ -63,6 +63,7 @@ exports.createProperty = BigPromise(async (req, res, next) => {
   });
 
   
+
   //fetch all properties
 exports.getAllProperties = BigPromise(async (req, res, next) => {
     winstonlogger.info("getAllProperties controller called...");
@@ -90,6 +91,7 @@ exports.getAllProperties = BigPromise(async (req, res, next) => {
       });
     }
   });
+
 
 
   //delete property based on id
@@ -129,6 +131,7 @@ exports.deleteProperty = BigPromise(async (req, res, next) => {
       });
     }
   });
+
 
 
  //update property based on ID
@@ -184,22 +187,23 @@ exports.updateProperty = BigPromise(async (req, res, next) => {
 
   
 
-  //fetch properties based on owner ID
+  //fetch properties based on owner ID extracted from token
 exports.getPropertiesByOwner = BigPromise(async (req, res, next) => {
     winstonlogger.info("getPropertiesByOwner controller called...");
   
-    const { id } = req.params;
+    //const { id } = req.params;
+    const ownerIdFromToken = req.user._id;
   
-    if (!id) {
-      winstonlogger.error("Owner ID is required");
+    if (!ownerIdFromToken) {
+      winstonlogger.error("Owner ID from token is missing");
       return res.status(400).json({
         success: false,
-        message: "Owner ID is required",
+        message: "Owner ID from token is missing",
       });
     }
   
     try {
-      const properties = await Property.find({ owner: id });
+      const properties = await Property.find({ owner: ownerIdFromToken });
   
       if (!properties) {
         winstonlogger.error("Properties not found");
@@ -221,5 +225,48 @@ exports.getPropertiesByOwner = BigPromise(async (req, res, next) => {
       });
     }
   });
+
+
+ //search and sort properties based on query parameters
+ exports.searchAndSortProperties = BigPromise(async (req, res, next) => {
+  winstonlogger.info("searchAndSortProperties controller called...");
+
+  const { searchTerm, sort } = req.query;
+
+  try {
+    let query = Property.find();
+
+    // Sorting logic
+    if (sort) {
+      const sortBy = sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    }
+
+    // Searching logic
+    if (searchTerm) {
+      query = query.find({
+        $or: [
+          { name: { $regex: searchTerm, $options: 'i' } },
+          { description: { $regex: searchTerm, $options: 'i' } },
+          { typeOfProperty: { $regex: searchTerm, $options: 'i' } }, //for case-insensitive search
+          { address: { $regex: searchTerm, $options: 'i' } }
+        ],
+      });
+    }
+
+    const properties = await query.exec();
+
+    res.status(200).json({
+      status: "success",
+      data: properties,
+    });
+  } catch (error) {
+    winstonlogger.error("Error searching and sorting properties:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Error searching and sorting properties",
+    });
+  }
+});
 
 
