@@ -1,11 +1,17 @@
 import React from 'react';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+
+import PropertyListing from './PropertyListing';
 
 const Home = () => {
   return (
-    <div>
-      <h1>Welcome to the Home page!</h1>
-      {/* Add your content here */}
-    </div>
+    <Container>
+      {/* <Typography variant="h4" component="div" gutterBottom>
+        Welcome to the Home Page
+      </Typography> */}
+      <PropertyListing />
+    </Container>
   );
 };
 

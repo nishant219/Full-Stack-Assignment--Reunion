@@ -8,10 +8,12 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const PropertyForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
+  const { user } = useAuth();
 
   const [property, setProperty] = useState({
     name: '',
@@ -23,7 +25,6 @@ const PropertyForm = () => {
   });
 
   useEffect(() => {
-    // Fetch property details if editing an existing property
     if (id) {
       fetchPropertyDetails();
     }
@@ -46,6 +47,9 @@ const PropertyForm = () => {
     });
   };
 
+  const userId = user ? user._id : '';
+  const authToken = userId;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -53,43 +57,29 @@ const PropertyForm = () => {
       const url = id ? `https://backend-reunion.vercel.app/api/property/${id}` : 'https://backend-reunion.vercel.app/api/property';
       const method = id ? 'PUT' : 'POST';
 
+      const headers = {
+        'Content-Type': 'application/json',
+      };
+
+      if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+      }
+
       const response = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify(property),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        navigate('/property-listing'); // Redirect to the property listing page after successful creation/update
+        navigate('/property-listing');
       } else {
         console.error('Error creating/updating property:', data.message);
       }
     } catch (error) {
       console.error('Error creating/updating property:', error);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (window.confirm('Are you sure you want to delete this property?')) {
-      try {
-        const response = await fetch(`https://backend-reunion.vercel.app/api/property/${id}`, {
-          method: 'DELETE',
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-          navigate('/property-listing'); // Redirect to the property listing page after successful deletion
-        } else {
-          console.error('Error deleting property:', data.message);
-        }
-      } catch (error) {
-        console.error('Error deleting property:', error);
-      }
     }
   };
 
@@ -172,11 +162,6 @@ const PropertyForm = () => {
         <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px', alignSelf: 'flex-start' }}>
           {id ? 'Update Property' : 'Create Property'}
         </Button>
-        {id && (
-          <Button type="button" variant="contained" color="error" onClick={handleDelete} style={{ marginTop: '16px', alignSelf: 'flex-start' }}>
-            Delete Property
-          </Button>
-        )}
       </form>
     </Container>
   );

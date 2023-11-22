@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -9,7 +10,13 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
+// context
+import { useAuth } from '../context/AuthContext';
+
 export default function SignIn() {
+  const navigate = useNavigate();
+  const { login } = useAuth(); // Call useAuth within the functional component
+
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -34,11 +41,13 @@ export default function SignIn() {
       });
 
       if (response.ok) {
-        setSuccess('Login successful!'); // Display success message
-        // You may want to redirect the user or perform other actions on successful login
+        const data = await response.json();
+        login(data.user);
+        setSuccess('Login successful!');
+        navigate('/');
       } else {
         const data = await response.json();
-        setError(data.message || 'Login failed'); // Display the error message from the API or a default message
+        setError(data.message || 'Login failed');
       }
     } catch (error) {
       console.error('An error occurred:', error);

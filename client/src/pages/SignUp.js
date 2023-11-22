@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
 export default function SignUp() {
+  const navigate = useNavigate(); // Add this line to use the navigate function
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
 
@@ -34,10 +36,12 @@ export default function SignUp() {
       });
 
       if (response.ok) {
-        setSuccess('Registration successful!'); // Display success message
+        setSuccess('Registration successful!'); 
+        // Redirect to the login page after successful registration
+        navigate('/login'); 
       } else {
         const data = await response.json();
-        setError(data.message || 'Registration failed'); // Display the error message from the API or a default message
+        setError(data.message || 'Registration failed'); 
       }
     } catch (error) {
       console.error('An error occurred:', error);
