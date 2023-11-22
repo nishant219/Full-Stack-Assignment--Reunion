@@ -43,11 +43,16 @@ app.use(morgan('tiny'));
 app.use(helmet());
 app.use(xss());
 
+// Trust the first proxy in front of the app
+app.set('trust proxy', 1);
 
 const limiter = rateLimit({
-  max: 100,
-  windowMs: 60 * 60 * 1000,
-  message: "Too many requests from this IP, please try again in an hour!"
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  keyGenerator: function (req) {
+    // Use X-Real-IP header for rate limiting if present
+    return req.headers['x-real-ip'] || req.ip;
+  },
 });
 
 
