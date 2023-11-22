@@ -1,5 +1,13 @@
 # Property-Portal Reunion Readme👨‍💻 
 
+## Client
+
+The client application is hosted at [https://client-reunion.vercel.app/](https://client-reunion.vercel.app/).
+
+## Server API
+
+The server API can be accessed at [https://backend-reunion.vercel.app/api/list-properties](https://backend-reunion.vercel.app/api/list-properties).
+
 ## Introduction
 
 This project is a comprehensive property portal that allows tenants to search for properties based on their preferences and property owners to manage their property listings. 
