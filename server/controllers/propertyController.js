@@ -246,8 +246,8 @@ exports.getPropertiesByOwner = BigPromise(async (req, res, next) => {
     if (searchTerm) {
       query = query.find({
         $or: [
-          { name: { $regex: searchTerm, $options: 'i' } },
-          { description: { $regex: searchTerm, $options: 'i' } },
+          { name: { $regex: searchTerm, $options: 'i' } },  
+          { description: { $regex: searchTerm, $options: 'i' } }, 
           { typeOfProperty: { $regex: searchTerm, $options: 'i' } }, //for case-insensitive search
           { address: { $regex: searchTerm, $options: 'i' } }
         ],
