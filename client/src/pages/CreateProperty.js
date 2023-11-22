@@ -10,6 +10,7 @@ import InputLabel from '@mui/material/InputLabel';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+
 const PropertyForm = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -54,7 +55,9 @@ const PropertyForm = () => {
     e.preventDefault();
 
     try {
-      const url = id ? `https://backend-reunion.vercel.app/api/property/${id}` : 'https://backend-reunion.vercel.app/api/property';
+      const url = id
+        ? `https://backend-reunion.vercel.app/api/property/${id}`
+        : 'https://backend-reunion.vercel.app/api/property';
       const method = id ? 'PUT' : 'POST';
 
       const headers = {

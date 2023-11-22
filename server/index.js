@@ -29,15 +29,16 @@ DBConnection();
 
 
 //middlewares
-app.use(bodyParser.urlencoded({ extended: true }));  // Body parser, reading data from body into req.body
 app.use(express.json());  // Body parser, reading data from body into req.body
+app.use(bodyParser.urlencoded({ extended: true }));  // Body parser, reading data from body into req.body
+app.use(cookieParser());  // Cookie parser, reading data from cookies into req.cookies
 app.use(express.json({ limit: "10kb" }))  // Body limit is 10
 app.use(express.urlencoded({ extended: true, limit: "10kb" }))  // Body limit is 10
 app.use(cors());  // Enable CORS
 app.use(morgan('tiny')); // Logging HTTP requests
 app.use(helmet()); // Set security HTTP headers
 app.use(xss()); // Sanitize data
-app.use(cookieParser());
+
 
 const limiter = rateLimit({
   max: 100,
