@@ -31,7 +31,7 @@ DBConnection();
 //middlewares
 app.use(express.json());  // Body parser, reading data from body into req.body
 app.use(cors({
-  origin: ['http://localhost:5000', 'https://backend-reunion.vercel.app/api/'],
+  origin: ['http://localhost:3000', 'https://backend-reunion.vercel.app/'],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
