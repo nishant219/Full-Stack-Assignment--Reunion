@@ -27,7 +27,7 @@ const UpdateProperty = ({ property, onCancelUpdate }) => {
   const handleUpdate = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/property/${property._id}`,
+        `https://backend-reunion.vercel.app/api/property/${property._id}`,
         {
           method: "PATCH",
           headers: {

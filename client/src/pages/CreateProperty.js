@@ -37,7 +37,7 @@ const PropertyForm = () => {
     e.preventDefault();
 
     try {
-      const url = 'http://localhost:5000/api/property';
+      const url = 'https://backend-reunion.vercel.app/api/property';
       const method = 'POST';
 
       const headers = {

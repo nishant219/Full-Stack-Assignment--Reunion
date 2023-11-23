@@ -27,7 +27,7 @@ const PropertyListing = () => {
   const fetchProperties = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/api/list-properties",
+        "https://backend-reunion.vercel.app/api/list-properties",
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -51,7 +51,7 @@ const PropertyListing = () => {
   const handleSearch = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/search-properties?searchTerm=${searchTerm}&sort=${sort}`,
+        `https://backend-reunion.vercel.app/api/search-properties?searchTerm=${searchTerm}&sort=${sort}`,
         {
           headers: {
             Authorization: `Bearer ${authToken}`,
@@ -73,7 +73,7 @@ const PropertyListing = () => {
   const handleDelete = async (propertyId) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/delete-property/${propertyId}`,
+        `https://backend-reunion.vercel.app/api/delete-property/${propertyId}`,
         {
           method: "DELETE",
           headers: {
