@@ -1,6 +1,5 @@
-// PropertyForm.js
-
-import React, { useState } from 'react';
+// UpdatePropertyForm.js
+import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -9,11 +8,12 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-const PropertyForm = () => {
+const UpdatePropertyForm = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const { user } = useAuth();
 
   const [property, setProperty] = useState({
@@ -25,22 +25,38 @@ const PropertyForm = () => {
     isAvailable: true,
   });
 
+  useEffect(() => {
+    if (id) {
+      fetchPropertyDetails();
+    }
+  }, [id]);
+
+  const fetchPropertyDetails = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/property/${id}`);
+      const data = await response.json();
+      setProperty(data.data);
+    } catch (error) {
+      console.error('Error fetching property details:', error);
+    }
+  };
+
   const handleChange = (e) => {
     setProperty({
       ...property,
       [e.target.name]: e.target.value,
     });
   };
-  console.log(user);
+
   const userId = user ? user._id : '';
-  const authToken = user?.token || null ;
+  const authToken = userId;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const url = 'http://localhost:5000/api/property';
-      const method = 'POST';
+      const url = id ? `http://localhost:5000/api/property/${id}` : '';
+      const method = id ? 'PUT' : '';
 
       const headers = {
         'Content-Type': 'application/json',
@@ -61,17 +77,17 @@ const PropertyForm = () => {
       if (response.ok) {
         navigate('/property-listing');
       } else {
-        console.error('Error creating property:', data.message);
+        console.error('Error updating property:', data.message);
       }
     } catch (error) {
-      console.error('Error creating property:', error);
+      console.error('Error updating property:', error);
     }
   };
 
   return (
     <Container>
       <Typography variant="h4" component="div" gutterBottom style={{ marginBottom: '20px', color: '#3f51b5' }}>
-        Create Property
+        Edit Property
       </Typography>
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', maxWidth: '400px', margin: 'auto' }}>
@@ -145,11 +161,11 @@ const PropertyForm = () => {
           />
         </div>
         <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px', alignSelf: 'flex-start' }}>
-          Create Property
+          Update Property
         </Button>
       </form>
     </Container>
   );
 };
 
-export default PropertyForm;
+export default UpdatePropertyForm;

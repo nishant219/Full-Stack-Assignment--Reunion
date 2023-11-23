@@ -74,7 +74,7 @@ userSchema.methods.getJwtToken = function () {
   //return jwt.sign({check _id}, secret, {expiry time})
   return jwt.sign(
     {
-      id: this._id,
+      id: this._id
     },
       process.env.JWT_SECRET,
     {

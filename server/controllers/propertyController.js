@@ -7,60 +7,60 @@ const BigPromise = require("../middlewares/bigPromise");
 
 
 exports.createProperty = BigPromise(async (req, res, next) => {
-    winstonlogger.info("createProperty controller called...");
-  
-    const { name, description, price, address, typeOfProperty, isAvailable } = req.body;
-    const owner = req.user._id;
-  
-    if (!owner) {
-      winstonlogger.error("User not found");
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
-  
-    if (!name || !description || !price || !address || !typeOfProperty || !isAvailable) {
-      winstonlogger.error("Name, description, price, address, type of property and availability status");
-      return res.status(400).json({
-        success: false,
-        message: "Name, description, price, address, type of property and availability status are required",
-      });
-    }
+  winstonlogger.info("createProperty controller called...");
 
-    const existingProperty = await Property.findOne({ name, address });
+  const { name, description, price, address, typeOfProperty, isAvailable } = req.body;
+  const owner = req.user._id;
 
-      if (existingProperty) {
-        winstonlogger.error("Property with the same name and address already exists");
-        return res.status(400).json({
-          success: false,
-          message: "Property with the same name and address already exists",
-        });
-      }
-  
-    try {
-      const property = await Property.create({
-        name,
-        description,
-        price,
-        address,
-        owner,
-        typeOfProperty,
-        isAvailable
-      });
-  
-      res.status(201).json({
-        status: "success",
-        data: property,
-      });
-    } catch (error) {
-      winstonlogger.error("Error creating property:", error);
-      return res.status(500).json({
-        success: false,
-        message: "Property not created",
-      });
-    }
-  });
+  if (!owner) {
+    winstonlogger.error("User not found");
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
+    });
+  }
+
+  if (!name || !description || !price || !address || !typeOfProperty || !isAvailable) {
+    winstonlogger.error("Name, description, price, address, type of property, and availability status are required");
+    return res.status(400).json({
+      success: false,
+      message: "Name, description, price, address, type of property, and availability status are required",
+    });
+  }
+
+  const existingProperty = await Property.findOne({ name, address });
+
+  if (existingProperty) {
+    winstonlogger.error("Property with the same name and address already exists");
+    return res.status(400).json({
+      success: false,
+      message: "Property with the same name and address already exists",
+    });
+  }
+
+  try {
+    const property = await Property.create({
+      name,
+      description,
+      price,
+      address,
+      owner,
+      typeOfProperty,
+      isAvailable,
+    });
+
+    res.status(201).json({
+      status: "success",
+      data: property,
+    });
+  } catch (error) {
+    winstonlogger.error("Error creating property:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Property not created",
+    });
+  }
+});
 
   
 

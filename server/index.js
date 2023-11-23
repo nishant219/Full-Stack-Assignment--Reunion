@@ -43,22 +43,22 @@ app.use(morgan('tiny'));
 app.use(helmet());
 app.use(xss());
 
-// Trust the first proxy in front of the app
-app.set('trust proxy', 1);
+// // Trust the first proxy in front of the app
+// app.set('trust proxy', 1);
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
-  keyGenerator: function (req) {
-    // Use X-Real-IP header for rate limiting if present
-    return req.headers['x-real-ip'] || req.ip;
-  },
-});
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000, // 15 minutes
+//   max: 100, // limit each IP to 100 requests per windowMs
+//   keyGenerator: function (req) {
+//     // Use X-Real-IP header for rate limiting if present
+//     return req.headers['x-real-ip'] || req.ip;
+//   },
+// });
 
 
 // Define API routes 
-app.use('/api/', limiter, userRoutes);
-app.use('/api/', limiter, propertyRoutes);
+app.use('/api/', userRoutes);
+app.use('/api/', propertyRoutes);
 
 
 

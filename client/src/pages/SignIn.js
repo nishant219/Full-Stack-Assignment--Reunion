@@ -32,7 +32,7 @@ export default function SignIn() {
       const email = formData.get('email');
       const password = formData.get('password');
 
-      const response = await fetch('https://backend-reunion.vercel.app/api/login', {
+      const response = await fetch('http://localhost:5000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +42,11 @@ export default function SignIn() {
 
       if (response.ok) {
         const data = await response.json();
-        login(data.user);
+        // console.log(data);
+        login({
+          user: data.user,
+          token: data.token,
+        });
         setSuccess('Login successful!');
         navigate('/');
       } else {
