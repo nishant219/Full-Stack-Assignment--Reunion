@@ -26,7 +26,7 @@ DBConnection();
 //middlewares
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://backend-reunion.vercel.app"],
+    origin: ["http://localhost:3000", 'https://client-reunion.vercel.app', "https://backend-reunion.vercel.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
