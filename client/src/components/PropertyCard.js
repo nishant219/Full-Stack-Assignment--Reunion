@@ -31,20 +31,10 @@ const PropertyCard = ({ property, onUpdate, onDelete }) => {
         {/* Update and Delete Buttons */}
         {property.isOwner && (
           <>
-            <Button
-              variant="outlined"
-              color="primary"
-              onClick={onUpdate}
-              style={{ marginTop: "8px" }}
-            >
-              Update
+            <Button variant="contained" color="primary" onClick={onUpdate}>
+              Edit
             </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={onDelete}
-              style={{ marginTop: "8px", marginLeft: "8px" }}
-            >
+            <Button variant="contained" color="secondary" onClick={onDelete}>
               Delete
             </Button>
           </>

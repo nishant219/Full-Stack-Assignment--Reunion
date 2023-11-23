@@ -7,12 +7,15 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
+import UpdateProperty from "./UpdateProperty";
 
 import { useAuth } from "../context/AuthContext";
 
 const PropertyListing = () => {
   const { user } = useAuth();
   const authToken = user?.token || null;
+  const [update, setUpdate] = useState(false);
+  const [updateProperty, setUpdateProperty] = useState(null); // Added state for the property to update
   const [properties, setProperties] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sort, setSort] = useState("");
@@ -62,31 +65,9 @@ const PropertyListing = () => {
     }
   };
 
-  const handleUpdate = async (propertyId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5000/api/update-property/${propertyId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          // Add your updated property data here
-          body: JSON.stringify({
-            /* Updated property data */
-          }),
-        }
-      );
-
-      if (response.ok) {
-        fetchProperties();
-      } else {
-        console.error("Error updating property:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error updating property:", error);
-    }
+  const handleUpdate = (property) => {
+    setUpdate(true);
+    setUpdateProperty(property);
   };
 
   const handleDelete = async (propertyId) => {
@@ -112,69 +93,81 @@ const PropertyListing = () => {
   };
 
   return (
-    <Container>
-      <Typography
-        variant="h4"
-        component="div"
-        gutterBottom
-        style={{ marginBottom: "20px", color: "#3f51b5" }}
-      >
-        Property Search / Listing Page
-      </Typography>
-
-      <div style={{ marginBottom: "20px" }}>
-        <TextField
-          label="Search by name, description, type, address..."
-          variant="outlined"
-          fullWidth
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+    <>
+      {update ? (
+        <UpdateProperty
+          property={updateProperty}
+          onCancelUpdate={() => {
+            setUpdate(false);
+            setUpdateProperty(null);
+          }}
         />
-        <Select
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-          style={{ marginLeft: "10px" }}
-        >
-          <MenuItem value="">Sort By</MenuItem>
-          <MenuItem value="name">Name</MenuItem>
-          <MenuItem value="price">Price</MenuItem>
-        </Select>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSearch}
-          style={{ marginLeft: "10px" }}
-        >
-          Search & Sort Apply
-        </Button>
-      </div>
+      ) : (
+        <Container>
+          <Typography
+            variant="h4"
+            component="div"
+            gutterBottom
+            style={{ marginBottom: "20px", color: "#3f51b5" }}
+          >
+            Property Search / Listing Page
+          </Typography>
 
-      <Typography
-        variant="h4"
-        component="div"
-        gutterBottom
-        style={{ marginBottom: "20px", color: "#3f51b5" }}
-      >
-        My Properties
-      </Typography>
+          <div style={{ marginBottom: "20px" }}>
+            <TextField
+              label="Search by name, description, type, address..."
+              variant="outlined"
+              fullWidth
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Select
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              style={{ marginLeft: "10px" }}
+            >
+              <MenuItem value="">Sort By</MenuItem>
+              <MenuItem value="name">Name</MenuItem>
+              <MenuItem value="price">Price</MenuItem>
+            </Select>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSearch}
+              style={{ marginLeft: "10px" }}
+            >
+              Search & Sort Apply
+            </Button>
+          </div>
 
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-        }}
-      >
-        {properties.map((property) => (
-          <PropertyCard
-            key={property._id}
-            property={property}
-            onUpdate={() => handleUpdate(property._id)}
-            onDelete={() => handleDelete(property._id)}
-          />
-        ))}
-      </div>
-    </Container>
+          <Typography
+            variant="h4"
+            component="div"
+            gutterBottom
+            style={{ marginBottom: "20px", color: "#3f51b5" }}
+          >
+            My Properties
+          </Typography>
+
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "space-between",
+            }}
+          >
+            {properties.map((property) => (
+              <PropertyCard
+                key={property._id}
+                property={property}
+                onUpdate={() => handleUpdate(property)}
+                onDelete={() => handleDelete(property._id)}
+              />
+            ))}
+          </div>
+        </Container>
+      )}
+    </>
   );
 };
 
