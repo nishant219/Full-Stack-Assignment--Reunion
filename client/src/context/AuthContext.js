@@ -33,7 +33,7 @@ const AuthProvider = ({ children }) => {
     // Example: Perform logout, clear user, and remove from localStorage
     setUser(null);
     Cookies.remove('user');
-    //localStorage.removeItem('user');
+    localStorage.removeItem('user');
   };
 
   const value = {
