@@ -1,5 +1,3 @@
-// PropertyForm.js
-
 import React, { useState } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -31,7 +29,7 @@ const PropertyForm = () => {
       [e.target.name]: e.target.value,
     });
   };
-  console.log(user);
+  //console.log(user);
   const userId = user ? user._id : '';
   const authToken = user?.token || null ;
 

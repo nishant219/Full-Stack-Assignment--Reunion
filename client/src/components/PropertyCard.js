@@ -1,17 +1,11 @@
+// PropertyCard.js
 import React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-const PropertyCard = ({ property }) => {
-  const handleEdit = (id) => {
-    console.log("edit property id: ", id);
-  };
-
-  const handleDelete = (id) => {
-    console.log("delete property id: ", id);
-  };
+const PropertyCard = ({ property, onUpdate, onDelete }) => {
   return (
     <Card style={{ width: "300px", margin: "16px" }}>
       <CardContent>
@@ -33,20 +27,23 @@ const PropertyCard = ({ property }) => {
         <Typography variant="body2" color="text.secondary">
           {property.isAvailable ? "Available" : "Not Available"}
         </Typography>
-        {/* //add two buttons if prop contain owner id */}
+
+        {/* Update and Delete Buttons */}
         {property.isOwner && (
           <>
             <Button
-              variant="contained"
+              variant="outlined"
               color="primary"
-              onClick={() => handleEdit(property._id)}
+              onClick={onUpdate}
+              style={{ marginTop: "8px" }}
             >
-              Edit
+              Update
             </Button>
             <Button
-              variant="contained"
+              variant="outlined"
               color="secondary"
-              onClick={() => handleDelete(property._id)}
+              onClick={onDelete}
+              style={{ marginTop: "8px", marginLeft: "8px" }}
             >
               Delete
             </Button>

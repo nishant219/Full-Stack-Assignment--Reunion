@@ -1,4 +1,3 @@
-// UpdatePropertyForm.js
 import React, { useState, useEffect } from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -49,7 +48,7 @@ const UpdatePropertyForm = () => {
   };
 
   const userId = user ? user._id : '';
-  const authToken = userId;
+  const authToken = user?.token || null ;
 
   const handleSubmit = async (e) => {
     e.preventDefault();

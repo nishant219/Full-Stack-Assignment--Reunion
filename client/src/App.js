@@ -7,6 +7,7 @@ import SignIn from './pages/SignIn';
 import SignUp from './pages/SignUp';
 import PropertyListing from './pages/PropertyListing';
 import CreateProperty from './pages/CreateProperty';
+import UpdateProperty from './pages/UpdateProperty';
 import Home from './pages/Home';
 //components
 import Footer from './components/Footer';
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/login" element={<SignIn />} />
           <Route path="/register" element={<SignUp />} />
           <Route path="/create-property" element={<CreateProperty />} />
+          <Route path="/update-property/:id" element={<UpdateProperty />} />
         </Routes>
         <Footer />
       </Router>

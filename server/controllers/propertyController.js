@@ -227,6 +227,7 @@ exports.getPropertiesByOwner = BigPromise(async (req, res, next) => {
   });
 
 
+  
  //search and sort properties based on query parameters
  exports.searchAndSortProperties = BigPromise(async (req, res, next) => {
   winstonlogger.info("searchAndSortProperties controller called...");
@@ -235,13 +236,11 @@ exports.getPropertiesByOwner = BigPromise(async (req, res, next) => {
 
   try {
     let query = Property.find();
-
     // Sorting logic
     if (sort) {
       const sortBy = sort.split(',').join(' ');
       query = query.sort(sortBy);
     }
-
     // Searching logic
     if (searchTerm) {
       query = query.find({
