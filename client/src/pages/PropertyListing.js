@@ -15,7 +15,7 @@ const PropertyListing = () => {
   const { user } = useAuth();
   const authToken = user?.token || null;
   const [update, setUpdate] = useState(false);
-  const [updateProperty, setUpdateProperty] = useState(null); // Added state for the property to update
+  const [updateProperty, setUpdateProperty] = useState(null); 
   const [properties, setProperties] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [sort, setSort] = useState("");
@@ -34,6 +34,7 @@ const PropertyListing = () => {
           },
         }
       );
+
       const data = await response.json();
 
       data.data.forEach((property) => {

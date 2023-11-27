@@ -8,9 +8,8 @@ const useAuth = () => {
 
 
 const AuthProvider = ({ children }) => {
-
   const [user, setUser] = useState(()=>{
-    const storedUser = Cookies.get('user');
+  const storedUser = Cookies.get('user');
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
@@ -18,7 +17,7 @@ const AuthProvider = ({ children }) => {
     //const storedUser = localStorage.getItem('user');
     const storedUser = Cookies.get('user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));  // Parse the stringified user object
+      setUser(JSON.parse(storedUser));  
     }
   }, []);
 
@@ -30,7 +29,6 @@ const AuthProvider = ({ children }) => {
 
 
   const logout = () => {
-    // Example: Perform logout, clear user, and remove from localStorage
     setUser(null);
     Cookies.remove('user');
     localStorage.removeItem('user');

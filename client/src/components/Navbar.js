@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -8,30 +8,36 @@ import Typography from '@mui/material/Typography';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login'); 
+  };
 
   return (
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <RouterLink to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             Home
-          </Link>
+          </RouterLink>
         </Typography>
         <ul style={{ listStyleType: 'none', display: 'flex', alignItems: 'center' }}>
           {user ? (
             <>
               <li style={{ margin: '0 10px' }}>
-                <Link to="/property-listing" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <RouterLink to="/property-listing" style={{ textDecoration: 'none', color: 'inherit' }}>
                   Property Listing
-                </Link>
+                </RouterLink>
               </li>
               <li style={{ margin: '0 10px' }}>
-                <Link to="/create-property" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <RouterLink to="/create-property" style={{ textDecoration: 'none', color: 'inherit' }}>
                   Create Property
-                </Link>
+                </RouterLink>
               </li>
               <li>
-                <Button color="inherit" onClick={logout}>
+                <Button color="inherit" onClick={handleLogout}>
                   Logout
                 </Button>
               </li>
@@ -39,14 +45,14 @@ const Navbar = () => {
           ) : (
             <>
               <li style={{ margin: '0 10px' }}>
-                <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <RouterLink to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
                   Login
-                </Link>
+                </RouterLink>
               </li>
               <li style={{ margin: '0 10px' }}>
-                <Link to="/register" style={{ textDecoration: 'none', color: 'inherit' }}>
+                <RouterLink to="/register" style={{ textDecoration: 'none', color: 'inherit' }}>
                   Register
-                </Link>
+                </RouterLink>
               </li>
             </>
           )}

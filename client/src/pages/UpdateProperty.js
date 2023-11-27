@@ -4,8 +4,13 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const UpdateProperty = ({ property, onCancelUpdate }) => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
   const [updatedProperty, setUpdatedProperty] = useState({
     name: property.name,
     description: property.description,
@@ -24,7 +29,11 @@ const UpdateProperty = ({ property, onCancelUpdate }) => {
     }));
   };
 
-  const handleUpdate = async () => {
+  const userId = user ? user._id : "";
+  const authToken = user?.token || null;
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
     try {
       const response = await fetch(
         `https://backend-reunion.vercel.app/api/property/${property._id}`,
@@ -32,15 +41,17 @@ const UpdateProperty = ({ property, onCancelUpdate }) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${authToken}`
           },
           body: JSON.stringify(updatedProperty),
         }
       );
 
       if (response.ok) {
-        // Handle successful update (e.g., show a success message)
+        const responseData = await response.json(); 
+        setUpdatedProperty(responseData); 
         console.log("Property updated successfully!");
-        onCancelUpdate(); // Close the update form
+        onCancelUpdate(); 
       } else {
         console.error("Error updating property:", response.statusText);
       }

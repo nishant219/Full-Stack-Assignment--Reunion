@@ -86,7 +86,6 @@ userSchema.methods.getJwtToken = function () {
 
 // ---------------------------------------------------------------------
 
-  
 
 //generate forgot password token (just string)
 userSchema.methods.getForgotPasswordToken = function () {
