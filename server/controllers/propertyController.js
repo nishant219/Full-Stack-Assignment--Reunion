@@ -3,7 +3,7 @@ const User = require("../models/userModel");
 const winstonlogger = require("../utils/winston");
 const schemaValidator = require("../helper/schemaValidator");
 const BigPromise = require("../middlewares/bigPromise");
-
+const redisClient = require("../redisClient");
 
 
 exports.createProperty = BigPromise(async (req, res, next) => {
@@ -65,12 +65,21 @@ exports.createProperty = BigPromise(async (req, res, next) => {
   
 
   //fetch all properties
-exports.getAllProperties = BigPromise(async (req, res, next) => {
+  exports.getAllProperties = BigPromise(async (req, res, next) => {
     winstonlogger.info("getAllProperties controller called...");
   
     try {
+      const catchedProperties = await redisClient.get("properties");
+      if (catchedProperties) {
+        winstonlogger.info("Properties fetched from Redis");
+        return res.status(200).json({
+          status: "success",
+          data: JSON.parse(catchedProperties),
+        });
+      }
+      
       const properties = await Property.find();
-
+  
       if (!properties) {
         winstonlogger.error("Properties not found");
         return res.status(404).json({
@@ -78,6 +87,9 @@ exports.getAllProperties = BigPromise(async (req, res, next) => {
           message: "Properties not found",
         });
       }
+  
+     redisClient.set("properties", JSON.stringify(properties));
+     redisClient.expire("properties", 60);
   
       res.status(200).json({
         status: "success",
@@ -90,8 +102,7 @@ exports.getAllProperties = BigPromise(async (req, res, next) => {
         message: "Properties not found",
       });
     }
-  });
-
+});  
 
 
   //delete property based on id
@@ -139,7 +150,9 @@ exports.updateProperty = BigPromise(async (req, res, next) => {
     winstonlogger.info("updateProperty controller called...");
   
     const { id } = req.params;
+    console.log(id);
     const { name, description, price, address, isAvailable, typeOfProperty } = req.body;
+
   
     if (!id) {
       winstonlogger.error("Property ID is required");
@@ -158,6 +171,15 @@ exports.updateProperty = BigPromise(async (req, res, next) => {
     }
   
     try {
+      // const catchedProperties = await redisClient.get("properties");
+      // if (catchedProperties) {
+      //   winstonlogger.info("Properties fetched from Redis");
+      //   return res.status(200).json({
+      //     status: "success",
+      //     data: JSON.parse(catchedProperties),
+      //   });
+      // }
+
       const property = await Property.findByIdAndUpdate(
         id,
         { name, description, price, address, isAvailable, typeOfProperty },
@@ -171,6 +193,9 @@ exports.updateProperty = BigPromise(async (req, res, next) => {
           message: "Property not found",
         });
       }
+
+      // redisClient.set("properties", JSON.stringify(property));
+      // redisClient.expire("properties", 60);
   
       res.status(200).json({
         status: "success",

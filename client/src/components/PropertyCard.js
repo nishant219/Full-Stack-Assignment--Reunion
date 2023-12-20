@@ -5,6 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
+
 const PropertyCard = ({ property, onUpdate, onDelete }) => {
   return (
     <Card style={{ width: "300px", margin: "16px" }}>

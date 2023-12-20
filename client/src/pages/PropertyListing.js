@@ -66,10 +66,12 @@ const PropertyListing = () => {
     }
   };
 
+
   const handleUpdate = (property) => {
     setUpdate(true);
     setUpdateProperty(property);
   };
+  
 
   const handleDelete = async (propertyId) => {
     try {

@@ -27,8 +27,7 @@ const propertySchema = new mongoose.Schema({
     },
     isAvailable: {
         type: Boolean,
-        default: true,
-        required: [true, "Please provide availability status"],
+        default: true
     },
     typeOfProperty: {
         type: String,
