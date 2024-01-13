@@ -11,7 +11,7 @@ const {
 
 
 
-//router.route().method(functionality that route going to perform)
+//router.route("/path").method(functionality that route going to perform)
 
 router.route("/signup").post(signup);  
 router.route("/login").post(login);

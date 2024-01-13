@@ -1,31 +1,41 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
+import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 // context
 import { useAuth } from '../context/AuthContext';
 
+function Message({ type, content }) {
+  const color = type === 'success' ? 'success' : 'error';
+  return (
+    <Typography variant="body2" color={color} align="center" sx={{ mt: 1 }}>
+      {content}
+    </Typography>
+  );
+}
+
+const defaultTheme = createTheme();
+
 export default function SignIn() {
   const navigate = useNavigate();
-  const { login } = useAuth(); // Call useAuth within the functional component
+  const { login } = useAuth();
 
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const [message, setMessage] = React.useState({ type: '', content: '' });
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
-    // Reset error and success messages
-    setError(null);
-    setSuccess(null);
 
     try {
       const formData = new FormData(event.currentTarget);
@@ -42,83 +52,105 @@ export default function SignIn() {
 
       if (response.ok) {
         const data = await response.json();
-        // console.log(data);
         login({
           user: data.user,
           token: data.token,
         });
-        setSuccess('Login successful!');
+        setMessage({ type: 'success', content: 'Login successful!' });
         navigate('/');
       } else {
         const data = await response.json();
-        setError(data.message || 'Login failed');
+        setMessage({ type: 'error', content: data.message || 'Login failed' });
       }
     } catch (error) {
       console.error('An error occurred:', error);
-      setError('An unexpected error occurred');
+      setMessage({ type: 'error', content: 'An unexpected error occurred' });
     }
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-        }}
+    <ThemeProvider theme={defaultTheme}>
+      <Grid
+        container
+        component="main"
+        sx={{ height: '69.8vh', minHeight: 'fit-content' }}
       >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-          <LockOutlinedIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign in
-        </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            autoFocus
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+        <CssBaseline />
+        <Grid
+          item
+          xs={false}
+          sm={4}
+          md={7}
+          sx={{
+            backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+          <Box
+            sx={{
+              my: 8,
+              mx: 4,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
           >
-            Sign In
-          </Button>
-
-          {error && (
-            <Typography variant="body2" color="error" align="center" sx={{ mt: 1 }}>
-              {error}
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
             </Typography>
-          )}
-
-          {success && (
-            <Typography variant="body2" color="success" align="center" sx={{ mt: 1 }}>
-              {success}
-            </Typography>
-          )}
-        </Box>
-      </Box>
-    </Container>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container justifyContent="center">
+                <Grid item>
+                  <Link href="/register" variant="body2">
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+              {message.type && <Message type={message.type} content={message.content} />}
+            </Box>
+          </Box>
+        </Grid>
+      </Grid>
+    </ThemeProvider>
   );
 }

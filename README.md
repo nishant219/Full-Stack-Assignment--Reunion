@@ -13,7 +13,7 @@ The server API can be accessed at [https://backend-reunion.vercel.app/api/list-p
 This project is a comprehensive property portal that allows tenants to search for properties based on their preferences and property owners to manage their property listings. 
 
 The portal is built using the following technologies:
-- Frontend: React
+- Frontend: React and Material UI
 - Backend: Node.js/Express
 - Database: MongoDB Atlas
 - Middlewares: Various middleware libraries such as `cors`, `yup`, `body-parser`, `helmet`, `express-mongo-sanitize`, `xss-clean`, and `express-rate-limit` are used for security and request handling.

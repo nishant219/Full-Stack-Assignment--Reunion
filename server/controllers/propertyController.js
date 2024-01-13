@@ -20,11 +20,11 @@ exports.createProperty = BigPromise(async (req, res, next) => {
     });
   }
 
-  if (!name || !description || !price || !address || !typeOfProperty || !isAvailable) {
-    winstonlogger.error("Name, description, price, address, type of property, and availability status are required");
+  if (!name || !description || !price || !address || !typeOfProperty ) {
+    winstonlogger.error("Name, description, price, address, and type of property are required");
     return res.status(400).json({
       success: false,
-      message: "Name, description, price, address, type of property, and availability status are required",
+      message: "Name, description, price, address, and type of property are required",
     });
   }
 
@@ -260,7 +260,7 @@ exports.getPropertiesByOwner = BigPromise(async (req, res, next) => {
   const { searchTerm, sort } = req.query;
 
   try {
-    let query = Property.find();
+    let query = Property.find();  //find() is a mongoose method  //query contains all the properties
     // Sorting logic
     if (sort) {
       const sortBy = sort.split(',').join(' ');
@@ -278,7 +278,7 @@ exports.getPropertiesByOwner = BigPromise(async (req, res, next) => {
       });
     }
 
-    const properties = await query.exec();
+    const properties = await query.exec(); //mongoose queries do not return any promise. So that if we want them to queries work like a promise we use the exec function.
 
     res.status(200).json({
       status: "success",
