@@ -8,6 +8,8 @@ import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import UpdateProperty from "./UpdateProperty";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
 
 import { useAuth } from "../context/AuthContext";
 
@@ -111,18 +113,26 @@ const PropertyListing = () => {
             variant="h4"
             component="div"
             gutterBottom
-            style={{ marginBottom: "20px", color: "#3f51b5" }}
+            style={{ marginBottom: "20px", color: "#3f51b5", textAlign: "center" }}
           >
-            Property Search / Listing Page
+            Property Listing 
           </Typography>
 
-          <div style={{ marginBottom: "20px" }}>
+          <div style={{ marginBottom: "20px", textAlign: "center" }}>
             <TextField
               label="Search by name, description, type, address..."
               variant="outlined"
               fullWidth
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+              placeholder="e.g., Apartment, New York, ..."
             />
             <Select
               value={sort}
@@ -137,7 +147,7 @@ const PropertyListing = () => {
               variant="contained"
               color="primary"
               onClick={handleSearch}
-              style={{ marginLeft: "10px" }}
+              style={{ marginLeft: "10px", marginTop: "10px" }}
             >
               Search & Sort Apply
             </Button>
@@ -175,3 +185,6 @@ const PropertyListing = () => {
 };
 
 export default PropertyListing;
+
+
+
