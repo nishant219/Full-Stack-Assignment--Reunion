@@ -14,7 +14,7 @@ const Home = () => {
         backgroundImage: `url("https://cdn.pixabay.com/photo/2015/05/15/12/53/lawn-768316_1280.jpg")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        height: "95vh",
+        height: "75vh",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -32,19 +32,7 @@ const Home = () => {
           Find a variety of properties that suit you very easily. Forget all difficulties in finding a residence for you.
         </Typography>
 
-        <Button
-          component={Link}
-          to="/property-listing"
-          variant="contained"
-          color="primary"
-          style={{ marginRight: "10px" }}
-        >
-          View My Properties
-        </Button>
-
-        <Button component={Link} to="/create-property" variant="outlined" color="primary">
-          Add New Property
-        </Button>
+        
       </Container>
     </Box>
   );

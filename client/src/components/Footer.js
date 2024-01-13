@@ -7,11 +7,11 @@ import LinkedInIcon from '@mui/icons-material/LinkedIn';
 
 const Footer = () => {
   return (
-    <Container component="footer" style={{ marginTop: '40px', backgroundColor: '#d3d6d9', padding: '20px 0' }}>
+    <Container component="footer" style={{ marginTop: '10px', backgroundColor: '#d3d6d9', padding: '25px 0' }}>
       <Typography variant="body2" color="text.secondary" align="center">
       <b> Reunion: Where Dreams Find a Home</b> <br /> 
         All rights reserved. © 2023 
-      </Typography>
+      </Typography> 
       <Typography variant="body2" color="text.secondary" align="center">
         <Link color="inherit" href="https://github.com/nishant219/Full-Stack-Assignment--Reunion" target="_blank" rel="noopener noreferrer">
           <GitHubIcon style={{ marginRight: '4px', color: '#0366d6' }} />
